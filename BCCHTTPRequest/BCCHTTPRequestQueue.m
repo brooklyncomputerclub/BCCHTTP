@@ -64,7 +64,7 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
 
 @interface BCCHTTPURLSessionRequestQueue : BCCHTTPRequestQueue
 
-@property (strong, nonatomic) NSURLSession *session;
+//@property (strong, nonatomic) NSURLSession *session;
 //@property (strong, nonatomic) NSURLSession *backgroundSession;
 //@property (copy, nonatomic) void (^backgroundSessionCompletionHandler)();
 
