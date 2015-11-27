@@ -11,6 +11,10 @@
 #import "BCCPersistentCache.h"
 #import <ImageIO/ImageIO.h>
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
+
 // TO DO: If we have the default version of a cached item,
 // we should be able to return that if a request variation
 // isn't already cached
@@ -70,7 +74,9 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
     self.requestQueue = [[BCCHTTPRequestQueue alloc] initWithQueueName:inIdentifier];
     //self.requestQueue.maxConcurrentOperationCount = 3.0;
     
+#if TARGET_OS_IPHONE
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
     
     return self;
 }
@@ -164,7 +170,10 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
     imageRequest.requestMethod = BCCHTTPRequestMethodGET;
     
     imageRequest.timeoutInterval = 40.0;
+
+#if TARGET_OS_IPHONE
     imageRequest.spinsActivityIndicator = NO;
+#endif
     
     return imageRequest;
 }
@@ -201,18 +210,24 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
         }
         return;
     }
-    
-    UIImage *image = [UIImage imageWithData:inImageData];
-    if (!image) {
-        return;
-    }
    
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     NSNumber *loadStatusNumber = [NSNumber numberWithInteger:inLoadStatus];
 
     [userInfo setObject:inURL forKey:BCCHTTPResourceControllerNotificationKeyURL];
     [userInfo setObject:loadStatusNumber forKey:BCCHTTPResourceControllerNotificationKeyLoadStatus];
+    
+    id image = nil;
+    
+// TO DO: Make this work on AppKit
+#if TARGET_OS_IPHONE
+    image = [UIImage imageWithData:inImageData];
+    if (!image) {
+        return;
+    }
+    
     [userInfo setObject:image forKey:BCCHTTPResourceControllerNotificationKeyImage];
+#endif
 
     NSNotification *notification = [NSNotification notificationWithName:BCCHTTPResourceControllerImageLoadNotification object:self userInfo:userInfo];
     

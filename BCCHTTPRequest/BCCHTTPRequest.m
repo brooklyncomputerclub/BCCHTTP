@@ -217,7 +217,9 @@ NSString *BCCHTTPRequestOAuthTokenSecretKey = @"oauth_token_secret";
     
     self.cacheable = NO;
     
+#if TARGET_OS_IPHONE
     self.spinsActivityIndicator = YES;
+#endif
     
     self.retryCount = 0;
     self.minimumRetryInterval = BCCHTTPRequestDefaultMinimumRetryInterval;
@@ -846,10 +848,10 @@ NSString *BCCHTTPRequestOAuthTokenSecretKey = @"oauth_token_secret";
             [request setValue:OAuthSignature forHTTPHeaderField:BCCHTTPRequestAuthorizationHeaderKey];
         }
     } else if (self.authenticationType == BCCHTTPRequestAuthenticationTypeAuthToken && self.authToken) {
-        [request setValue:self.authToken forKey:BCCHTTPRequestAuthorizationHeaderKey];
+        [request setValue:self.authToken forHTTPHeaderField:BCCHTTPRequestAuthorizationHeaderKey];
     } else if (self.authenticationType == BCCHTTPRequestAuthenticationTypeBasic) {
         NSString *headerString = self.basicAuthAuthorizationHeaderString;
-        [request setValue:headerString forKey:BCCHTTPRequestAuthorizationHeaderKey];
+        [request setValue:headerString forHTTPHeaderField:BCCHTTPRequestAuthorizationHeaderKey];
     }
     
     request.HTTPShouldHandleCookies = NO;
@@ -1342,9 +1344,11 @@ NSString *BCCHTTPRequestOAuthTokenSecretKey = @"oauth_token_secret";
     self.loadStatus = BCCHTTPRequestStatusLoading;
     self.time = [NSDate date];
     
+#if TARGET_OS_IPHONE
     if (self.spinsActivityIndicator) {
         [[BCCNetworkActivityIndicator sharedIndicator] increment];
     }
+#endif
 }
 
 - (void)handleBodyDataBytesSent:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
@@ -1401,9 +1405,11 @@ NSString *BCCHTTPRequestOAuthTokenSecretKey = @"oauth_token_secret";
 {
     [self processResponseData];
 
+#if TARGET_OS_IPHONE
     if (self.spinsActivityIndicator) {
         [[BCCNetworkActivityIndicator sharedIndicator] decrement];
     }
+#endif
  
     self.error = error;
     

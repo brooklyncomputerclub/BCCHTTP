@@ -8,6 +8,12 @@
 #import <Foundation/Foundation.h>
 #import "BCCHTTPRequest.h"
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
+
 @class BCCPersistentCache;
 @class BCCHTTPRequestQueue;
 
@@ -25,7 +31,11 @@ extern NSString *BCCHTTPResourceControllerNotificationKeyData;
 extern NSString *BCCHTTPResourceControllerNotificationKeyURL;
 extern NSString *BCCHTTPResourceControllerNotificationKeyCacheKey;
 
+#if TARGET_OS_IPHONE
 typedef void (^BCCHTTPResourceControllerImageLoadBlock)(NSData *imageData, UIImage *image, BCCHTTPResourceControllerLoadStatus status, NSError *error);
+#elif TARGET_OS_MAC
+typedef void (^BCCHTTPResourceControllerImageLoadBlock)(NSData *imageData, NSImage *image, BCCHTTPResourceControllerLoadStatus status, NSError *error);
+#endif
 
 
 @interface BCCHTTPResourceController : NSObject <NSCacheDelegate>

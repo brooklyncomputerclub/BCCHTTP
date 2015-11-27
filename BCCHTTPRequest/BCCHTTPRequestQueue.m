@@ -12,6 +12,12 @@
 #import "BCCPersistentCache.h"
 #import "NSString+BCCAdditions.h"
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
+
 static char *BCCHTTPRequestQueueQueueTypeSpecificKey = "BCCHTTPRequestQueueWorkerQueueSpecificKey";
 static char *BCCHTTPRequestQueueWorkerQueueSpecificValue = "BCCHTTPRequestQueueWorkerQueueSpecificValue";
 static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueueDelegateQueueSpecificValue";
@@ -25,8 +31,10 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
 
 @property (strong, nonatomic) NSURLSession *session;
 
+#if TARGET_OS_IPHONE
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 @property (nonatomic, readonly) BOOL isRunningBackgroundTask;
+#endif
 
 @property (strong, nonatomic) dispatch_queue_t workerQueue;
 @property (strong, nonatomic) dispatch_queue_t delegateQueue;
@@ -55,9 +63,11 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
 - (void)performDelegateSelector:(SEL)selector;
 - (void)performDelegateSelector:(SEL)selector forRequest:(BCCHTTPRequest *)request;
 
+#if TARGET_OS_IPHONE
 - (void)startBackgroundTask;
 - (void)endBackgroundTask;
 - (void)performBackgroundWorkCleanupIfFinished;
+#endif
 
 @end
 
@@ -134,9 +144,10 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
     cache.maximumFileCacheSize = 50 * 1024 * 1024; //50MB
     subclassInstance.resultsCache = cache;
     
+#if TARGET_OS_IPHONE
     subclassInstance.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-    
     [[NSNotificationCenter defaultCenter] addObserver:subclassInstance selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+#endif
     
     return subclassInstance;
 }
@@ -217,7 +228,9 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
         [self performDelegateSelector:@selector(requestQueueDidBecomeIdle:)];
     }
 
+#if TARGET_OS_IPHONE
     [self performBackgroundWorkCleanupIfFinished];
+#endif
 }
 
 - (void)startRequest:(BCCHTTPRequest *)request
@@ -473,9 +486,12 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
     
     // If we're running in the background, only process backgroundable
     // requests
+
+#if TARGET_OS_IPHONE
     if (self.isRunningBackgroundTask) {
         [predicateFormat BCC_appendPredicateConditionWithOperator:@"AND" format:@"backgroundable == %@", [NSNumber numberWithBool:NO]];
     }
+#endif
     
     NSArray *idleRequests = [self findRequestsMatchingPredicate:[NSPredicate predicateWithFormat:predicateFormat]];
     if (idleRequests.count < 1) {
@@ -814,6 +830,8 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
 
 #pragma mark - Background Requests
 
+#if TARGET_OS_IPHONE
+
 - (void)performBackgroundWorkCleanupIfFinished
 {
     if (self.hasBackgroundableRequests) {
@@ -840,6 +858,7 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
     self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
 }
 
+
 - (BOOL)isRunningBackgroundTask
 {
     return (self.backgroundTaskIdentifier != UIBackgroundTaskInvalid);
@@ -852,7 +871,9 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
     }
     
     [self startBackgroundTask];
+
 }
+#endif
 
 @end
 

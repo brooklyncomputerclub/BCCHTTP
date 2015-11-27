@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BCCHTTPRequest.h"
 #import <Mantle/Mantle.h>
 
 @interface BCCHTTPRequest (MantleSupport)
