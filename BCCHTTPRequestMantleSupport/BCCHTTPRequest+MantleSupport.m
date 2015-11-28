@@ -21,6 +21,27 @@
     objc_setAssociatedObject(self, @"mantleResponseModelClassName", className, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSString *)mantleResponseRootKey
+{
+    return objc_getAssociatedObject(self, @"mantleResponseRootKey");
+}
+
+- (void)setMantleResponseRootKey:(NSString *)className
+{
+    objc_setAssociatedObject(self, @"mantleResponseRootKey", className, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)interpretMantleDictionaryAsList
+{
+    NSNumber *interpretValue = objc_getAssociatedObject(self, @"interpretMantleDictionaryAsList");
+    return [interpretValue boolValue];
+}
+
+- (void)setInterpretMantleDictionaryAsList:(BOOL)interpret
+{
+    objc_setAssociatedObject(self, @"interpretMantleDictionaryAsList", @(interpret), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (id)responseMantleObject
 {
     NSString *modelClassName = self.mantleResponseModelClassName;
@@ -28,12 +49,18 @@
         return nil;
     }
     
-    Class modelClass = NSClassFromString(modelClassName);
+    NSString *rootKey = self.mantleResponseRootKey;
     
     id JSONObject = self.responseJSONObject;
     if (!JSONObject) {
         return nil;
     }
+    
+    if (rootKey) {
+        JSONObject = [JSONObject objectForKey:rootKey];
+    }
+
+    Class modelClass = NSClassFromString(modelClassName);
     
     NSError *error;
     
@@ -41,7 +68,12 @@
     if ([JSONObject isKindOfClass:[NSArray class]]) {
         mantleObject = [MTLJSONAdapter modelsOfClass:modelClass fromJSONArray:JSONObject error:&error];
     } else if ([JSONObject isKindOfClass:[NSDictionary class]]) {
-        mantleObject = [MTLJSONAdapter modelOfClass:modelClass fromJSONDictionary:JSONObject error:&error];
+        if (self.interpretMantleDictionaryAsList) {
+            mantleObject = [MTLJSONAdapter modelsOfClass:modelClass fromJSONArray:[JSONObject allValues] error:&error];
+        } else {
+            mantleObject = [MTLJSONAdapter modelOfClass:modelClass fromJSONDictionary:JSONObject error:&error];
+        }
+
     }
     
     return mantleObject;

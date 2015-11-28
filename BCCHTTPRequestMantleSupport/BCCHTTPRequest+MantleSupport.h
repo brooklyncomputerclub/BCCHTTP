@@ -13,6 +13,8 @@
 @interface BCCHTTPRequest (MantleSupport)
 
 @property (strong, nonatomic) NSString *mantleResponseModelClassName;
+@property (strong, nonatomic) NSString *mantleResponseRootKey;
+@property (nonatomic) BOOL interpretMantleDictionaryAsList;
 @property (strong, nonatomic, readonly) id responseMantleObject;
 
 @end
