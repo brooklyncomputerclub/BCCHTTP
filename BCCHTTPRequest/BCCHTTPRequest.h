@@ -129,6 +129,8 @@ extern NSString *BCCHTTPRequestFileInfoUUIDKey;
 @property (assign, nonatomic, getter=isBackgroundable) BOOL backgroundable;
 #endif
 
+@property (assign, nonatomic, getter=isBarrier) BOOL barrier;
+
 @property (assign, nonatomic, getter=isCacheable) BOOL cacheable;
 
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;

@@ -209,11 +209,23 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
 
 - (void)pumpRequestQueue
 {
-    if (!self.processing) {
+    if (!self.processing || (self.activeRequestLimit > 0 && self.activeRequests.count == self.activeRequestLimit)) {
         return;
     }
     
     //NSLog(@"Pumping request queue with active request count %lu : %lu", (unsigned long)self.activeRequests.count, (unsigned long)self.activeRequestLimit);
+    
+    __block BOOL hasBarrierRequest = NO;
+    [self.activeRequests enumerateObjectsUsingBlock:^(BCCHTTPRequest *  _Nonnull currentRequest, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (currentRequest.isBarrier) {
+            hasBarrierRequest = YES;
+            *stop = YES;
+        }
+    }];
+    
+    if (hasBarrierRequest) {
+        return;
+    }
     
     while (self.activeRequestLimit == 0 || (self.activeRequests.count < self.activeRequestLimit)) {
         BCCHTTPRequest *nextRequest = self.nextIdleRequest;
