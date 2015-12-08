@@ -90,7 +90,9 @@
 - (void)cancelRequest:(BCCHTTPRequest *)request;
 - (void)cancelAllRequests;
 
-// Worker Queue
+// Queues
+- (void)performBlockOnDelegateQueue:(void (^)())block;
+- (void)performBlockOnDelegateQueueAndWait:(void (^)())block;
 - (void)performBlockOnWorkerQueueAndWait:(void (^)())block;
 
 @end

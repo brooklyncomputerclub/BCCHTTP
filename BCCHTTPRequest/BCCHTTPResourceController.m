@@ -222,12 +222,15 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
 // TO DO: Make this work on AppKit
 #if TARGET_OS_IPHONE
     image = [UIImage imageWithData:inImageData];
+#elif TARGET_OS_MAC
+    image = [[NSImage alloc] initWithData:inImageData];
+#endif
+
     if (!image) {
         return;
     }
     
     [userInfo setObject:image forKey:BCCHTTPResourceControllerNotificationKeyImage];
-#endif
 
     NSNotification *notification = [NSNotification notificationWithName:BCCHTTPResourceControllerImageLoadNotification object:self userInfo:userInfo];
     
