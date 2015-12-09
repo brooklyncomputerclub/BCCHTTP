@@ -103,7 +103,7 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
     if (!inURL) {
         if (inCompletionBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                inCompletionBlock(nil, nil, BCCHTTPResourceControllerLoadStatusLoadFailed, nil);
+                inCompletionBlock(nil, nil, nil, BCCHTTPResourceControllerLoadStatusLoadFailed, nil);
             });
         }
         
@@ -206,7 +206,7 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
 {
     if (!inURL || !inImageData) {
         if (inCompletionBlock) {
-            inCompletionBlock(nil, nil, BCCHTTPResourceControllerLoadStatusLoadFailed, nil);
+            inCompletionBlock(nil, nil, inURL, BCCHTTPResourceControllerLoadStatusLoadFailed, nil);
         }
         return;
     }
@@ -241,7 +241,7 @@ NSString *BCCHTTPResourceControllerNotificationKeyCacheKey = @"CacheKey";
     
     if (inCompletionBlock) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            inCompletionBlock(inImageData, image, inLoadStatus, nil);
+            inCompletionBlock(inImageData, image, inURL, inLoadStatus, nil);
         });
     }
     

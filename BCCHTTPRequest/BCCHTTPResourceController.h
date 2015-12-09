@@ -32,9 +32,9 @@ extern NSString *BCCHTTPResourceControllerNotificationKeyURL;
 extern NSString *BCCHTTPResourceControllerNotificationKeyCacheKey;
 
 #if TARGET_OS_IPHONE
-typedef void (^BCCHTTPResourceControllerImageLoadBlock)(NSData *imageData, UIImage *image, BCCHTTPResourceControllerLoadStatus status, NSError *error);
+typedef void (^BCCHTTPResourceControllerImageLoadBlock)(NSData *imageData, UIImage *image, NSString *imageURL, BCCHTTPResourceControllerLoadStatus status, NSError *error);
 #elif TARGET_OS_MAC
-typedef void (^BCCHTTPResourceControllerImageLoadBlock)(NSData *imageData, NSImage *image, BCCHTTPResourceControllerLoadStatus status, NSError *error);
+typedef void (^BCCHTTPResourceControllerImageLoadBlock)(NSData *imageData, NSImage *image, NSString *imageURL, BCCHTTPResourceControllerLoadStatus status, NSError *error);
 #endif
 
 
