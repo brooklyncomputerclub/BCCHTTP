@@ -139,7 +139,7 @@ static char *BCCHTTPRequestQueueDelegateQueueSpecificValue = "BCCHTTPRequestQueu
     subclassInstance.queueName = queueName;
     subclassInstance.requests = [[NSMutableArray alloc] init];
     
-    BCCPersistentCache *cache = [[BCCPersistentCache alloc] initWithIdentifier:queueName rootDirectory:@"com.brooklyncomputerclub.BCCHTTPRequestQueue"];
+    BCCPersistentCache *cache = [[BCCPersistentCache alloc] initWithIdentifier:queueName rootDirectory:nil];
     cache.maximumMemoryCacheSize = 5 * 1024 * 1024; // 5 MB
     cache.maximumFileCacheSize = 50 * 1024 * 1024; //50MB
     subclassInstance.resultsCache = cache;
