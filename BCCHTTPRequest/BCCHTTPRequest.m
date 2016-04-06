@@ -1076,7 +1076,7 @@ NSString *BCCHTTPRequestOAuthTokenSecretKey = @"oauth_token_secret";
 
 - (NSInteger)buildMultipartBody
 {
-    BOOL hasBodyParametersOrFiles = (self.bodyParameters.count < 1 && !self.bodyFiles.count < 1);
+    BOOL hasBodyParametersOrFiles = (self.bodyParameters.count < 1 && self.bodyFiles.count < 1);
     if (hasBodyParametersOrFiles) {
         return 0;
     }
