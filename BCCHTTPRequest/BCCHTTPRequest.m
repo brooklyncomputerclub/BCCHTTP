@@ -50,6 +50,8 @@ const NSInteger BCCHTTPRequestMaxServerErrorStatusCode = 599;
 
 const NSInteger BCCHTTPRequestMethodUnspecified = 0;
 
+NSString *BCCHTTPRequestURLParametersKeyAPIVersion = @"BCCHTTPRequestAPIVersion";
+
 NSString *BCCHTTPRequestFileInfoParameterNameKey = @"BCCHTTPRequestFileInfoParameterNameKey";
 NSString *BCCHTTPRequestFileInfoFilenameKey = @"BCCHTTPRequestFileInfoFilenameKey";
 NSString *BCCHTTPRequestFileInfoFileDataKey = @"BCCHTTPRequestFileInfoFileDataKey";
@@ -341,14 +343,17 @@ NSString *BCCHTTPRequestOAuthTokenSecretKey = @"oauth_token_secret";
     
     [URLString appendString:self.baseURL];
     
-    if (self.APIVersion) {
-        [URLString BCC_appendURLPathComponent:self.APIVersion];
-    }
-    
     if (self.command) {
         NSString *parsedPath = self.command;
-        if (self.pathParameters.count) {
-            parsedPath = [self.command BCC_stringByParsingTagsWithStartDelimeter:@"{" endDelimeter:@"}" usingObject:self.pathParameters];
+        
+        NSMutableDictionary *pathParameters = _pathParameters ? [_pathParameters mutableCopy] : [[NSMutableDictionary alloc] init];
+        
+        if (self.APIVersion && ([pathParameters valueForKey:BCCHTTPRequestURLParametersKeyAPIVersion] == nil)) {
+            [pathParameters setObject:self.APIVersion forKey:BCCHTTPRequestURLParametersKeyAPIVersion];
+        }
+        
+        if (pathParameters.count > 0) {
+            parsedPath = [self.command BCC_stringByParsingTagsWithStartDelimeter:@"{" endDelimeter:@"}" usingObject:pathParameters];
         }
         
         [URLString BCC_appendURLPathComponent:parsedPath];
