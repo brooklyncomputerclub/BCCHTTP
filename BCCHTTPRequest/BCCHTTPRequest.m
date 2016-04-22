@@ -28,7 +28,7 @@ NSString *BCCHTTPRequestMultipartBoundaryString = @"0xKhTmLbOuNdArY";
 NSString *BCCHTTPRequestCacheSubdirectory = @"BCCHTTPRequest";
 NSString *BCCHTTPRequestBodyCacheDirectory = @"BodyCache";
 
-NSString *BCCHTTPRequestDefaultUserAgent = @"BCCHTTPRequest/2.0 (http://brooklyncomputerclub.com)";
+NSString *BCCHTTPRequestDefaultUserAgent = @"BCCHTTPRequest/2.0 (http://bcc.nyc)";
 
 const NSInteger BCCHTTPRequestDefaultBodyFormat = BCCHTTPRequestBodyFormatURLEncoded;
 
