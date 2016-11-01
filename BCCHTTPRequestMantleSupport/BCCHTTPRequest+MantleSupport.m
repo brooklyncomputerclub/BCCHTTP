@@ -7,6 +7,9 @@
 //
 
 #import "BCCHTTPRequest+MantleSupport.h"
+
+#ifdef BCCHTTPRequestMantleSupport
+
 #import <objc/runtime.h>
 
 @implementation BCCHTTPRequest (MantleSupport)
@@ -80,3 +83,5 @@
 }
 
 @end
+
+#endif

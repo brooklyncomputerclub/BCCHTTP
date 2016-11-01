@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "BCCHTTPRequest.h"
+
+#ifdef MantleVersionNumber
+#define BCCHTTPRequestMantleSupport
+
 #import <Mantle/Mantle.h>
 
 @interface BCCHTTPRequest (MantleSupport)
@@ -18,3 +22,5 @@
 @property (strong, nonatomic, readonly) id responseMantleObject;
 
 @end
+
+#endif
